@@ -12,25 +12,35 @@ def main():
             exit()
         if user_word == '1':
             user_word = input('Введите название вакансии:')
+            if user_word == '0':
+                exit()
             api_hh = HeadHunterAPI(user_word)
             hh_data = api_hh.get_vacancies()
             vacancies = get_from_headhunter(hh_data)
             top_vacancies = get_top_vacancies(vacancies, 10)
+            if len(top_vacancies) == 0:
+                print('\nВакансии не найдены!')
+                continue
             saver_hh = JsonSaver('hh_vacancies.json')
             for item in top_vacancies:
                 saver_hh.add_vacancy(item)
-            print('Файл с топовыми вакансиями создан!')
+            print('\nФайл с топовыми вакансиями создан!')
             break
         elif user_word == '2':
             user_word = input('Введите название вакансии:')
+            if user_word == '0':
+                exit()
             api_sj = SuperJobAPI(user_word)
             sj_data = api_sj.get_vacancies()
             vacancies = get_from_superjob(sj_data)
             top_vacancies = get_top_vacancies(vacancies, 10)
+            if len(top_vacancies) == 0:
+                print('\nВакансии не найдены!')
+                continue
             saver_sj = JsonSaver('sj_vacancies.json')
             for item in top_vacancies:
                 saver_sj.add_vacancy(item)
-            print('Файл с топовыми вакансиями создан!')
+            print('\nФайл с топовыми вакансиями создан!')
             break
         else:
             print('\nВводите только 1 или 2!\n')
@@ -43,7 +53,7 @@ def main():
         filtered_vacancies = filter_vacancies(top_vacancies,
                                               filter_words.split())
         if len(filtered_vacancies) == 0:
-            print('Нет вакансий по данным критериям!')
+            print('\nНет вакансий по данным критериям!\nДля выхода введите - 0\n')
             continue
         else:
             for i in filtered_vacancies:
