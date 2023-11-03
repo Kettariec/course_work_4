@@ -22,7 +22,7 @@ class HeadHunterAPI(API):
             'area': 113,
             'only_with_salary': True,
             'page': 0,
-            'per_page': 10,
+            'per_page': 100,
             'search_field': 'name'
         }
 
@@ -47,7 +47,8 @@ class SuperJobAPI(API):
         """Метод, который возвращает вакансии по заданному параметру"""
         headers = {
             'X-Api-App-Id':
-                'v3.r.120818960.416e8a50a0823fad0f08e71779d3cc0683000274.f70b011acaea2943591b6a3a5fe45297c822a8b3'
+                'v3.r.120818960.416e8a50a0823fad0f08e71779d3cc0683000274.'
+                'f70b011acaea2943591b6a3a5fe45297c822a8b3'
         }
         response = requests.get(self.url, headers=headers, params=self.params)
         return response.json()['objects']
@@ -59,7 +60,7 @@ class Vacancy:
 
     def __init__(self, name: str, url: str, salary: int, requirement: str):
         self.name = name
-        self.url - url
+        self.url = url
         self.salary = salary
         self.requirement = requirement
 
