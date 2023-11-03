@@ -54,10 +54,10 @@ class JsonSaver(Saver):
                 result.append(item)
         return result
 
-    def delete_vacancy(self, vacancy):
+    def delete_vacancy(self, vacancy_url: str):
         """Метод удаляющий вакансию из json-файла"""
         data = self.load_file()
         for item in data:
-            if item['url'] == vacancy.url:
+            if item['url'] == vacancy_url:
                 data.remove(item)
         self.save_file(data)
