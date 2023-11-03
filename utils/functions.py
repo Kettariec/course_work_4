@@ -11,28 +11,44 @@ def main():
         if user_word == '0':
             exit()
         if user_word == '1':
-            user_word = input('Введите ключевое слово для поиска вакансии:')
+            user_word = input('Введите название вакансии:')
             api_hh = HeadHunterAPI(user_word)
             hh_data = api_hh.get_vacancies()
-            vacancies_hh = get_from_headhunter(hh_data)
+            vacancies = get_from_headhunter(hh_data)
+            top_vacancies = get_top_vacancies(vacancies, 10)
             saver_hh = JsonSaver('hh_vacancies.json')
-            for item in vacancies_hh:
+            for item in top_vacancies:
                 saver_hh.add_vacancy(item)
-            print('Файл с вакансиями создан!')
+            print('Файл с топовыми вакансиями создан!')
             break
         elif user_word == '2':
-            user_word = input('Введите ключевое слово для поиска вакансии:')
+            user_word = input('Введите название вакансии:')
             api_sj = SuperJobAPI(user_word)
             sj_data = api_sj.get_vacancies()
-            vacancies_sj = get_from_superjob(sj_data)
+            vacancies = get_from_superjob(sj_data)
+            top_vacancies = get_top_vacancies(vacancies, 10)
             saver_sj = JsonSaver('sj_vacancies.json')
-            for item in vacancies_sj:
+            for item in top_vacancies:
                 saver_sj.add_vacancy(item)
-            print('Файл с вакансиями создан!')
+            print('Файл с топовыми вакансиями создан!')
             break
         else:
             print('\nВводите только 1 или 2!\n')
             continue
+    while True:
+        filter_words = input("Для фильтрации вакансий введите"
+                             " ключевые слова через пробел:\n").lower()
+        if filter_words == '0':
+            exit()
+        filtered_vacancies = filter_vacancies(top_vacancies,
+                                              filter_words.split())
+        if len(filtered_vacancies) == 0:
+            print('Нет вакансий по данным критериям!')
+            continue
+        else:
+            for i in filtered_vacancies:
+                print(i)
+            break
 
 
 def get_from_headhunter(vacancies: list):
@@ -61,3 +77,18 @@ def get_from_superjob(vacancies: list):
                                       item['candidat'])
                     vacancies_list.append(vacancy)
     return vacancies_list
+
+
+def filter_vacancies(vacancies: list, filter_words: list):
+    """Функция для фильтрации вакансий"""
+    filtered_list = []
+    for vacancy in vacancies:
+        for word in filter_words:
+            if word in vacancy.requirement.lower().split():
+                filtered_list.append(vacancy)
+    return filtered_list
+
+
+def get_top_vacancies(vacancies_list: list, top_number: int):
+    """Функция для получения топовых вакансий по зарплате"""
+    return sorted(vacancies_list)[-top_number:]
