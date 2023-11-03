@@ -23,18 +23,17 @@ class Saver(ABC):
 
 class JsonSaver(Saver):
     """Класс для работы с данными в json-файле"""
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, filename):
+        self.filename = filename
 
     def load_file(self):
-        with open(self.file, encoding='utf-8') as json_file:
-            data = json.load(json_file)
-        return data
+        with open(self.filename, 'r', encoding='utf-8') as json_file:
+            data_list = json.load(json_file)
+        return data_list
 
     def save_file(self, data):
-        with open(self.file, 'w', encoding='utf-8') as json_file:
-            json.dump(data, json_file, ensure_ascii=False)
-            # ensure_ascii - для корректного отображения кириллицы
+        with open(self.filename, 'w', encoding='utf-8') as json_file:
+            json.dump(data, json_file, ensure_ascii=False, indent=2)
 
     def add_vacancy(self, vacancy):
         """Метод для добавления вакансии в json-файл"""
@@ -42,7 +41,7 @@ class JsonSaver(Saver):
             'name': vacancy.name, 'url': vacancy.url,
             'salary': vacancy.salary, 'requirement': vacancy.requirement
         }
-        data_file = self.load_file()
+        data_file = list(self.load_file())
         data_file.append(new_vacancy)
         self.save_file(data_file)
 
