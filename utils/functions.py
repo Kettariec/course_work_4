@@ -51,7 +51,7 @@ def main():
             vacancies = get_from_superjob(sj_data)
             while True:
                 user_top = input('Какое количество топовых'
-                                 ' вакансий получить? От 1 до 30:')
+                                 ' вакансий получить? От 1 до 30:\n')
                 if user_top == '0':
                     exit()
                 if int(user_top) < 0:
@@ -78,29 +78,73 @@ def main():
             print('\nВводите только 1 или 2!\n')
             continue
     while True:
-        filter_words = input("Для фильтрации вакансий введите"
-                             " ключевые слова через пробел:\n").lower()
-        if filter_words == '0':
+        user_choice = input('\nДля фильтрации по зарплате введите - 1'
+                            '\nДля фильтрации по ключевым словам - 2'
+                            '\nДля выхода - 0\n')
+        if user_choice == '0':
             exit()
-        filtered_vacancies = filter_vacancies(
-            top_vacancies, filter_words.split()
-        )
-        if len(filtered_vacancies) == 0:
-            print('\nНет вакансий по данным критериям!'
-                  '\nДля выхода введите - 0\n')
-            continue
+        if user_choice == '1':
+            while True:
+                min_salary = input('\nВведите минимальный порог'
+                                   ' зарплаты от 200000 до 450000:')
+                if min_salary == '0':
+                    exit()
+                if int(min_salary) < 0:
+                    print('\nВы готовы платить для того, чтобы работать? :)')
+                    continue
+                if 0 < int(min_salary) < 200000:
+                    print('\nМы ищем топовые вакансии!')
+                    continue
+                if int(min_salary) > 450000:
+                    print('\nГотовы перевозить кокаин в рабочих поездках? :)')
+                    continue
+                if 200000 <= int(min_salary) <= 4500000:
+                    result = saver.get_data_by_salary(int(min_salary))
+                    vacancies_list = []
+                    for item in result:
+                        vacancy = Vacancy(item['name'], item['url'],
+                                          item['salary'],
+                                          item['requirement'])
+                        vacancies_list.append(vacancy)
+                    for item in vacancies_list:
+                        print(item)
+                    while True:
+                        user_del = input('\nВведите ссылку на вакансию,'
+                                         ' чтобы удалить её из файла:\n')
+                        if user_del == '0':
+                            exit()
+                        saver.delete_vacancy(user_del)
+                        print('\nДля выхода из программы введите - 0')
+                        continue
+                else:
+                    print('\nВведите число!\n')
+                    continue
+        elif user_choice == '2':
+            filter_words = input("Для фильтрации вакансий введите"
+                                 " ключевые слова через пробел:\n").lower()
+            if filter_words == '0':
+                exit()
+            filtered_vacancies = filter_vacancies(
+                top_vacancies, filter_words.split()
+            )
+            if len(filtered_vacancies) == 0:
+                print('\nНет вакансий по данным критериям!'
+                      '\nДля выхода введите - 0\n')
+                continue
+            else:
+                for item in filtered_vacancies:
+                    print(item)
+                while True:
+                    user_del = input('\nВведите ссылку на вакансию,'
+                                     ' чтобы удалить её из файла:\n')
+                    if user_del == '0':
+                        exit()
+                    saver.delete_vacancy(user_del)
+                    print('\nДля выхода из программы введите - 0')
+                    continue
         else:
-            for i in filtered_vacancies:
-                print(i)
-            break
-    while True:
-        user_del = input('\nВведите ссылку на вакансию,'
-                         ' чтобы удалить её из файла:\n')
-        if user_del == '0':
-            exit()
-        saver.delete_vacancy(user_del)
-        print('\nДля выхода из программы введите - 0')
-        continue
+            print('\nВводите только 1 или 2!\n')
+            continue
 
 
 def get_from_headhunter(vacancies: list):
