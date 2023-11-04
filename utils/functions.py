@@ -17,7 +17,22 @@ def main():
             api_hh = HeadHunterAPI(user_word)
             hh_data = api_hh.get_vacancies()
             vacancies = get_from_headhunter(hh_data)
-            top_vacancies = get_top_vacancies(vacancies, 10)
+            while True:
+                user_top = input('Какое количество топовых вакансий получить? От 1 до 30:')
+                if user_top == '0':
+                    exit()
+                if int(user_top) < 0:
+                    print('Число не может быть отрицательным!')
+                    continue
+                if int(user_top) > 30:
+                    print('Используйте число до 30!')
+                    continue
+                if 0 < int(user_top) <= 30:
+                    top_vacancies = get_top_vacancies(vacancies, int(user_top))
+                    break
+                else:
+                    print('Введите число!')
+                    continue
             if len(top_vacancies) == 0:
                 print('\nВакансии не найдены!')
                 continue
@@ -33,7 +48,22 @@ def main():
             api_sj = SuperJobAPI(user_word)
             sj_data = api_sj.get_vacancies()
             vacancies = get_from_superjob(sj_data)
-            top_vacancies = get_top_vacancies(vacancies, 10)
+            while True:
+                user_top = input('Какое количество топовых вакансий получить? От 1 до 30:')
+                if user_top == '0':
+                    exit()
+                if int(user_top) < 0:
+                    print('Число не может быть отрицательным!')
+                    continue
+                if int(user_top) > 30:
+                    print('Используйте число до 30!')
+                    continue
+                if 0 < int(user_top) <= 30:
+                    top_vacancies = get_top_vacancies(vacancies, int(user_top))
+                    break
+                else:
+                    print('Введите число!')
+                    continue
             if len(top_vacancies) == 0:
                 print('\nВакансии не найдены!')
                 continue
