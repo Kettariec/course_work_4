@@ -18,7 +18,8 @@ def main():
             hh_data = api_hh.get_vacancies()
             vacancies = get_from_headhunter(hh_data)
             while True:
-                user_top = input('Какое количество топовых вакансий получить? От 1 до 30:')
+                user_top = input('Какое количество топовых'
+                                 ' вакансий получить? От 1 до 30:')
                 if user_top == '0':
                     exit()
                 if int(user_top) < 0:
@@ -36,9 +37,9 @@ def main():
             if len(top_vacancies) == 0:
                 print('\nВакансии не найдены!')
                 continue
-            saver_hh = JsonSaver('hh_vacancies.json')
+            saver = JsonSaver('hh_vacancies.json')
             for item in top_vacancies:
-                saver_hh.add_vacancy(item)
+                saver.add_vacancy(item)
             print('\nФайл с топовыми вакансиями создан!')
             break
         elif user_word == '2':
@@ -49,7 +50,8 @@ def main():
             sj_data = api_sj.get_vacancies()
             vacancies = get_from_superjob(sj_data)
             while True:
-                user_top = input('Какое количество топовых вакансий получить? От 1 до 30:')
+                user_top = input('Какое количество топовых'
+                                 ' вакансий получить? От 1 до 30:')
                 if user_top == '0':
                     exit()
                 if int(user_top) < 0:
@@ -67,9 +69,9 @@ def main():
             if len(top_vacancies) == 0:
                 print('\nВакансии не найдены!')
                 continue
-            saver_sj = JsonSaver('sj_vacancies.json')
+            saver = JsonSaver('sj_vacancies.json')
             for item in top_vacancies:
-                saver_sj.add_vacancy(item)
+                saver.add_vacancy(item)
             print('\nФайл с топовыми вакансиями создан!')
             break
         else:
@@ -80,15 +82,25 @@ def main():
                              " ключевые слова через пробел:\n").lower()
         if filter_words == '0':
             exit()
-        filtered_vacancies = filter_vacancies(top_vacancies,
-                                              filter_words.split())
+        filtered_vacancies = filter_vacancies(
+            top_vacancies, filter_words.split()
+        )
         if len(filtered_vacancies) == 0:
-            print('\nНет вакансий по данным критериям!\nДля выхода введите - 0\n')
+            print('\nНет вакансий по данным критериям!'
+                  '\nДля выхода введите - 0\n')
             continue
         else:
             for i in filtered_vacancies:
                 print(i)
             break
+    while True:
+        user_del = input('\nВведите ссылку на вакансию,'
+                         ' чтобы удалить её из файла:\n')
+        if user_del == '0':
+            exit()
+        saver.delete_vacancy(user_del)
+        print('\nДля выхода из программы введите - 0')
+        continue
 
 
 def get_from_headhunter(vacancies: list):
