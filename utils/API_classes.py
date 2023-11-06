@@ -2,6 +2,10 @@ from abc import ABC, abstractmethod
 import requests
 
 
+class ParsingError(Exception):
+    pass
+
+
 class API(ABC):
     """Абстрактный метод для работы с API"""
     @abstractmethod
@@ -29,6 +33,8 @@ class HeadHunterAPI(API):
     def get_vacancies(self):
         """Метод, который возвращает вакансии по заданному параметру"""
         response = requests.get(self.url, params=self.params)
+        if response.status_code != 200:
+            raise ParsingError(f'Ошибка получения вакансий! Статус: {response.status_code}')
         return response.json()['items']
 
 
@@ -51,6 +57,8 @@ class SuperJobAPI(API):
                 'f70b011acaea2943591b6a3a5fe45297c822a8b3'
         }
         response = requests.get(self.url, headers=headers, params=self.params)
+        if response.status_code != 200:
+            raise ParsingError(f'Ошибка получения вакансий! Статус: {response.status_code}')
         return response.json()['objects']
 
 
