@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 import requests
+import os
+
+api_key = os.getenv('SJob')
 
 
 class ParsingError(Exception):
@@ -34,7 +37,8 @@ class HeadHunterAPI(API):
         """Метод, который возвращает вакансии по заданному параметру"""
         response = requests.get(self.url, params=self.params)
         if response.status_code != 200:
-            raise ParsingError(f'Ошибка получения вакансий! Статус: {response.status_code}')
+            raise ParsingError(f'Ошибка получения вакансий! '
+                               f'Статус: {response.status_code}')
         return response.json()['items']
 
 
@@ -52,13 +56,12 @@ class SuperJobAPI(API):
     def get_vacancies(self):
         """Метод, который возвращает вакансии по заданному параметру"""
         headers = {
-            'X-Api-App-Id':
-                'v3.r.120818960.416e8a50a0823fad0f08e71779d3cc0683000274.'
-                'f70b011acaea2943591b6a3a5fe45297c822a8b3'
+            'X-Api-App-Id': api_key
         }
         response = requests.get(self.url, headers=headers, params=self.params)
         if response.status_code != 200:
-            raise ParsingError(f'Ошибка получения вакансий! Статус: {response.status_code}')
+            raise ParsingError(f'Ошибка получения вакансий! '
+                               f'Статус: {response.status_code}')
         return response.json()['objects']
 
 
